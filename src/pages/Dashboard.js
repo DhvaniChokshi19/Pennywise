@@ -1,9 +1,12 @@
 import React from 'react'
 import Header from '../components/Header'
+import Cards from '../components/Cards'
 
 function Dashboard(){
   return (
-    <div><Header></Header></div>
+    <div><Header></Header>
+    <Cards></Cards>
+    </div>
   )
 }
 
