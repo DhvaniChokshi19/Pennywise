@@ -1,8 +1,8 @@
 .my-card{
 box-shadow: var(--shadow);
 margin: 1rem;
-background-color: #FFF1DB;
-color: #536493;
+background-color: #F4EEFF;
+color: #02030b;
 width:400px;
 padding:0.2rem !important ;
 flex: 1;
