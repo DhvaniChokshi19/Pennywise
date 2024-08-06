@@ -26,7 +26,7 @@ function Dashboard() {
   //     date:"2024-05-24"
   //   },
   // ];
-  const [Transactions,setTransactions]=useState([]);
+  const [transactions,setTransactions]=useState([]);
   const [loading,setLoading]=useState(false);
   const [user ]=useAuthState(auth);
   const [isExpenseModalVisible, setIsExpenseModalVisible] = useState(false);
@@ -53,7 +53,7 @@ function Dashboard() {
   const onFinish = (values, type) => {
     const newTransaction = {
       type:type,
-      date:moment(values.date).format("YYYY-MM--DD"),
+      date:moment(values.date).format("YYYY-MM-DD"),
       amount:parseFloat(values.amount),
       tag:values.tag,
       name:values.name,
@@ -69,28 +69,43 @@ function Dashboard() {
       );
       console.log("Document written with ID:",docRef.id);
         toast.success("Transaction added");
+        let newArr = transactions;
+        newArr.push(transaction);
+        setTransactions(newArr);
+        cal_Balance();
     }catch(e){
       console.error("Error adding document:",e);
         toast.error("Couldn't add transaction");
     }
   }
 
-  useEffect(() => {
+useEffect(() => {
   //get all docs from a collection
 fetchTransactions();
-  }, [])
-  useEffect(() => {
+  }, []);
+
+useEffect(() => {
  cal_Balance()
-  }, [transactions])
-  
-function cal_Balance(){
+  }, [transactions]);
 
-}
-
+const cal_Balance=()=>{
+  let incomeTotal =0;
+  let expenseTotal = 0;
+  transactions.forEach((transaction)=>{
+    if(transaction.type==="income"){
+      incomeTotal+= transaction.amount;
+    }else{
+      expenseTotal+=transaction.amount;
+    }
+  });
+  setIncome(incomeTotal);
+  setExpense(expenseTotal);
+  setTotalBalance(incomeTotal-expenseTotal);
+};
   async function fetchTransactions(){
     setLoading(true);
     if(user){
-      const q = query(collection(db,`users/${user.id}/transactions`));
+      const q = query(collection(db,`users/${user.uid}/transactions`));
       const querySnapshot = await getDocs(q);
       let transactionsArray = [];
       querySnapshot.forEach((doc) => {
@@ -107,8 +122,14 @@ function cal_Balance(){
   return (
     <div>
       <Header />
+
+
       {loading?(<p>loading...</p>):(<>
-      <Cards showExpenseModal={showExpenseModal} showIncomeModal={showIncomeModal} />
+      <Cards
+      income={income}
+      expense={expense}
+      totalBalance={totalBalance}
+        showExpenseModal={showExpenseModal} showIncomeModal={showIncomeModal} />
       <AddExpenseModal
         isExpenseModalVisible={isExpenseModalVisible}
         handleExpenseCancel={handleExpenseCancel}
