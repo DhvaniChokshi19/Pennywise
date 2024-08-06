@@ -8,6 +8,7 @@ import {addDoc, collection, getDocs, query } from 'firebase/firestore';
 import {auth, db }from "../firebase";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import moment from 'moment';
+import TransactionsTable from '../components/TransactionsTable';
 
 function Dashboard() {
   // const transactions = [
@@ -82,7 +83,7 @@ function Dashboard() {
 useEffect(() => {
   //get all docs from a collection
 fetchTransactions();
-  }, []);
+  }, [user]);
 
 useEffect(() => {
  cal_Balance()
@@ -139,7 +140,9 @@ const cal_Balance=()=>{
         isIncomeModalVisible={isIncomeModalVisible}
         handleIncomeCancel={handleIncomeCancel}
         onFinish={onFinish}
-      /></>)}
+      />
+      <TransactionsTable transactions={transactions} />
+      </>)}
     </div>
   );
 }
