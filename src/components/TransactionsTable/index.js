@@ -1,6 +1,8 @@
 
 import React, { useState } from 'react'
 import { Radio, Select, Table } from 'antd';
+import searchimg from '../../assets/search.svg';
+import './styles.css';
 // import { Option } from 'antd/es/mentions';
 function TransactionsTable({transactions}) {
      const {Option}= Select;
@@ -48,10 +50,16 @@ let sortedTransactions=filteredTransactions.sort((a,b)=>{
 
 return (
 <>
-<input 
+<div className='table'>
+<div className="input-flex">
+    <img src={searchimg}width="16">
+    </img>
+   <input 
 value={search} 
 onChange={(e)=>setSearch(e.target.value ) }
 placeholder='Search by name'></input>
+</div>
+
 <Select className='select-input'
 onChange={(value)=> setTypeFilter(value|| "")}
 value={typeFilter}
@@ -61,6 +69,9 @@ allowClear>
 <Option value="income">Income</Option>
 <Option value="expense">Expense</Option>
 </Select>
+</div>
+<div className='table-button'>
+    <h2>My Transactions </h2>
 <Radio.Group className="input-radio"
 onChange={(e)=> setSortKey(e.target.value)}
 value={sortKey}>
@@ -68,8 +79,10 @@ value={sortKey}>
     <Radio.Button value="date">Sort by Date</Radio.Button>
     <Radio.Button value="amount">Sort by Amount</Radio.Button>
 </Radio.Group>
+</div>
 <Table dataSource={sortedTransactions} columns={columns} />
 </>
+
 )
 }
 
