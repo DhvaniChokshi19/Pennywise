@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { Radio, Select, Table } from 'antd';
 import searchimg from '../../assets/search.svg';
 import './styles.css';
+import { unparse } from 'papaparse';
 // import { Option } from 'antd/es/mentions';
 function TransactionsTable({transactions}) {
      const {Option}= Select;
@@ -48,6 +49,20 @@ let sortedTransactions=filteredTransactions.sort((a,b)=>{
     }
 });
 
+function exportCSV(){
+   var csv = unparse({
+    "fields":["name","type","amount","date","tag"],
+    transactions,
+   });
+  const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createObjectURL(blob);
+  link.href=url;
+  link.download="transactions.csv";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 return (
 <>
 <div className='table'>
@@ -65,7 +80,7 @@ onChange={(value)=> setTypeFilter(value|| "")}
 value={typeFilter}
 placeholder="Filter"
 allowClear>
-    <Option value="">All</Option>
+<Option value="">All</Option>
 <Option value="income">Income</Option>
 <Option value="expense">Expense</Option>
 </Select>
@@ -80,6 +95,17 @@ value={sortKey}>
     <Radio.Button value="amount">Sort by Amount</Radio.Button>
 </Radio.Group>
 </div>
+<div className="exportbtn">
+<button className='btn' onClick={exportCSV} >Export CSV</button>
+<label form="file-csv" className='btn btn-blue'>
+    Import from CSV
+</label>
+<input id="file-csv"
+type='file'
+accept='.csv'
+required
+onChange = {importFromCsv}
+styles={{display:"none"}}></input></div>
 <Table dataSource={sortedTransactions} columns={columns} />
 </>
 

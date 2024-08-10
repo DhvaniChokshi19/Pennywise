@@ -17,7 +17,7 @@ box-shadow: var(--shadow);
     outline: none;
 }
 .select-input{
-    width:10%;
+    width:20%;
     margin-right: 10;
     display: flex;
     align-items: center;
@@ -39,8 +39,18 @@ box-shadow: var(--shadow);
 }
 .table-button{
     display: flex;
-    justify-content: space-between;
+    gap: 0.5rem;
     align-items: center;
     width: 100%;
-    margin-bottom: 1rem;
+    margin-bottom: 0.4rem;
+}
+.exportbtn{
+        display: flex;
+        width: 40%;
+        margin-left: 68rem;
+        align-items: center;
+        box-shadow: var(--shadow);
+        background-color: #F4EEFF;
+        border-radius: 0.5rem;
+        padding: 0.4rem 0.9rem;
 }
