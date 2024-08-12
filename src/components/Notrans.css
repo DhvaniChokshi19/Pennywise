@@ -1,0 +1,16 @@
+.Notransaction{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-direction: column;
+    margin-bottom: 2rem;
+}
+.notranimg{
+    width: 400px;
+    margin: 4rem;
+}
+.Notransaction p{
+    text-align: center;
+    font-size: 1.2rem;
+}

@@ -3,19 +3,18 @@ import React, { useState } from 'react'
 import { Radio, Select, Table } from 'antd';
 import searchimg from '../../assets/search.svg';
 import './styles.css';
-import { unparse } from 'papaparse';
+import { parse, unparse } from 'papaparse';
+import { toast } from 'react-toastify';
+
 // import { Option } from 'antd/es/mentions';
-function TransactionsTable({transactions}) {
+function TransactionsTable({transactions, addTransaction, fetchTransactions}) {
      const {Option}= Select;
-     
     const [search,setSearch]=useState("");
     const [typeFilter,setTypeFilter]=useState("");
     const [sortKey,setSortKey] = useState("");
 const columns=[
     {
-        title:"Name",
-        dataIndex:'name',
-        key:'name',
+        title:"Name",  dataIndex:'name', key:'name',
     },
     {
         title: 'Amount',
@@ -38,7 +37,11 @@ const columns=[
         key:'date',
     },
 ];
-let filteredTransactions = transactions.filter((item)=>item.name.toLowerCase().includes(search.toLowerCase())&&item.type.includes(typeFilter));
+let filteredTransactions = transactions.filter(
+    (item)=>
+        item.name.toLowerCase().includes(search.toLowerCase())&&
+        item.type.includes(typeFilter)
+);
 let sortedTransactions=filteredTransactions.sort((a,b)=>{
     if(sortKey==='date'){
         return new Date(a.date)-new Date(b.date);
@@ -49,25 +52,48 @@ let sortedTransactions=filteredTransactions.sort((a,b)=>{
     }
 });
 
-function exportCSV(){
-   var csv = unparse({
-    "fields":["name","type","amount","date","tag"],
-    transactions,
-   });
-  const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
-  const url = URL.createObjectURL(blob);
-  const link = document.createObjectURL(blob);
-  link.href=url;
-  link.download="transactions.csv";
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+function exportCSV() {
+    const csv = unparse({
+        fields: ["name", "type", "amount", "date", "tag"],
+        data: transactions,
+    });
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);  // Use window.URL
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute('download', 'transactions.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
+function importFromCsv(event) {
+        event.preventDefault();
+        try {
+            parse(event.target.files[0], {
+                header: true,
+                complete: async function (results) {
+                    for (const transaction of results.data) {
+                        console.log("transactions", transaction);
+                        const newTransaction = {
+                            ...transaction,
+                            amount: parseFloat(transaction.amount),
+                        };
+                        await addTransaction(newTransaction, true);
+                    }
+                },
+            });
+            toast.success("All transactions added");
+            fetchTransactions();
+            event.target.value = null; 
+        } catch (e) {
+            toast.error(e.message);
+        }
+    }
 return (
 <>
 <div className='table'>
 <div className="input-flex">
-    <img src={searchimg}width="16">
+    <img alt=""src={searchimg}width="16">
     </img>
    <input 
 value={search} 
@@ -97,7 +123,7 @@ value={sortKey}>
 </div>
 <div className="exportbtn">
 <button className='btn' onClick={exportCSV} >Export CSV</button>
-<label form="file-csv" className='btn btn-blue'>
+<label for="file-csv" className='btn btn-blue'>
     Import from CSV
 </label>
 <input id="file-csv"
@@ -105,7 +131,7 @@ type='file'
 accept='.csv'
 required
 onChange = {importFromCsv}
-styles={{display:"none"}}></input></div>
+style={{ display: "none" }}></input></div>
 <Table dataSource={sortedTransactions} columns={columns} />
 </>
 

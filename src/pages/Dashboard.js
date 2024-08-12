@@ -9,7 +9,8 @@ import {auth, db }from "../firebase";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import moment from 'moment';
 import TransactionsTable from '../components/TransactionsTable';
-
+import ChartComponent from '../components/Charts';
+import NoTransactions from '../components/NoTransactions';
 function Dashboard() {
   
   const [transactions,setTransactions]=useState([]);
@@ -46,7 +47,7 @@ function Dashboard() {
     };
     addTransaction(newTransaction);
   };
-  async function addTransaction(transaction){
+  async function addTransaction(transaction,many){
     //add the doc
     try{
       const docRef = await addDoc(
@@ -54,14 +55,14 @@ function Dashboard() {
         transaction
       );
       console.log("Document written with ID:",docRef.id);
-        toast.success("Transaction added");
+       if(!many)toast.success("Transaction added")
         let newArr = transactions;
         newArr.push(transaction);
         setTransactions(newArr);
         cal_Balance();
     }catch(e){
       console.error("Error adding document:",e);
-        toast.error("Couldn't add transaction");
+      if(!many) toast.error("Couldn't add transaction");
     }
   }
 
@@ -116,6 +117,7 @@ const cal_Balance=()=>{
       expense={expense}
       totalBalance={totalBalance}
         showExpenseModal={showExpenseModal} showIncomeModal={showIncomeModal} />
+      {transactions.length != 0 ?<ChartComponent sortedTransactions={}></ChartComponent>:<NoTransactions></NoTransactions>}
       <AddExpenseModal
         isExpenseModalVisible={isExpenseModalVisible}
         handleExpenseCancel={handleExpenseCancel}
@@ -126,7 +128,7 @@ const cal_Balance=()=>{
         handleIncomeCancel={handleIncomeCancel}
         onFinish={onFinish}
       />
-      <TransactionsTable transactions={transactions} />
+      <TransactionsTable transactions={transactions} addTransaction={addTransaction} fetchTransactions={fetchTransactions}/>
       </>)}
     </div>
   );

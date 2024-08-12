@@ -47,7 +47,7 @@ box-shadow: var(--shadow);
 .exportbtn{
         display: flex;
         width: 40%;
-        margin-left: 68rem;
+        /* margin-left: 68rem; */
         align-items: center;
         box-shadow: var(--shadow);
         background-color: #F4EEFF;
