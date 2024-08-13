@@ -18,7 +18,7 @@ box-shadow: var(--shadow);
 }
 .select-input{
     width:20%;
-    margin-right: 10;
+   
     display: flex;
     align-items: center;
 box-shadow: var(--shadow);
@@ -28,6 +28,7 @@ box-shadow: var(--shadow);
 }
 .select-input > div{
     border: 0px solid #F4EEFF !important;
+    margin-left: 10px;
 }
 .table{
     width: 100%;
@@ -44,13 +45,15 @@ box-shadow: var(--shadow);
     width: 100%;
     margin-bottom: 0.4rem;
 }
+.table-button h2{
+    margin-left: 15px;
+}
 .exportbtn{
         display: flex;
         width: 40%;
-        /* margin-left: 68rem; */
+        margin-left:10px;
         align-items: center;
         box-shadow: var(--shadow);
-        background-color: #F4EEFF;
         border-radius: 0.5rem;
         padding: 0.4rem 0.9rem;
 }

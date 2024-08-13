@@ -106,18 +106,21 @@ const cal_Balance=()=>{
     setLoading(false);
   }
   
+  let sortedTransactions= transactions.sort((a,b)=>{
+      return new Date(a.date)-new Date(b.date);
+  })
+
+
   return (
     <div>
       <Header />
-
-
       {loading?(<p>loading...</p>):(<>
       <Cards
       income={income}
       expense={expense}
       totalBalance={totalBalance}
         showExpenseModal={showExpenseModal} showIncomeModal={showIncomeModal} />
-      {transactions.length != 0 ?<ChartComponent sortedTransactions={}></ChartComponent>:<NoTransactions></NoTransactions>}
+
       <AddExpenseModal
         isExpenseModalVisible={isExpenseModalVisible}
         handleExpenseCancel={handleExpenseCancel}
@@ -128,6 +131,11 @@ const cal_Balance=()=>{
         handleIncomeCancel={handleIncomeCancel}
         onFinish={onFinish}
       />
+            {transactions && transactions.length !== 0 ? (
+        <ChartComponent sortedTransactions={sortedTransactions}/>):(
+          <NoTransactions />
+        )}
+
       <TransactionsTable transactions={transactions} addTransaction={addTransaction} fetchTransactions={fetchTransactions}/>
       </>)}
     </div>

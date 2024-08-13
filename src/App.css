@@ -1,7 +1,20 @@
-.wrapper{
+.wrapper,
+.charts-wrapper{
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100vw;
     height: 90vh;
+    color: #02030b;
+}
+.charts-wrapper{
+    width: 93%;
+    justify-content: space-between;
+    gap: 0.5rem;
+    height: auto;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow);
+    margin: 2rem;
+    background-color: #F4EEFF;
 }
