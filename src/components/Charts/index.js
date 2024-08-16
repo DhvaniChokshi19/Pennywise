@@ -24,6 +24,7 @@ let newSpending = [
   {tag: "food",amount:0},
   {tag:"education",amount:0},
   {tag:"office",amount:0},
+  {tag:"entertainment",amount:0},
 ];
 spendingData.forEach((item)=>{
 if(item.tag=="food"){
@@ -31,8 +32,11 @@ if(item.tag=="food"){
 }else if(item.tag =="education"){
   newSpending[1].amount+=item.amount;
 }
-else{
+else if(item.tag=="office"){
   newSpending[2].amount+=item.amount;
+}
+else{
+  newSpending[3].amount+=item.amount;
 }
 });
 
